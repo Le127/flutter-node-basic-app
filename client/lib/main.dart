@@ -42,6 +42,19 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         actions: [
+          //Refresh and Delete
+          IconButton(
+              tooltip: "Refresh",
+              onPressed: () {
+                setState(() => indicator = true);
+                ServerApi.getUsers('/users').then((usersDB) {
+                  setState(() {
+                    usersData = usersDB.users;
+                    indicator = false;
+                  });
+                });
+              },
+              icon: const Icon(Icons.refresh)),
           IconButton(
               tooltip: "Delete all users",
               onPressed: () {
@@ -50,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                   usersData = [];
                 });
               },
-              icon: const Icon(Icons.delete))
+              icon: const Icon(Icons.delete)),
         ],
         title: const Text('UserList'),
         backgroundColor: Colors.indigo[800],

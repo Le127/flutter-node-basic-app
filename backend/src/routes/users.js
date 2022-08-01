@@ -13,21 +13,21 @@ router.get('/api/users', async (req, res) => {
 
 //Get One User
 router.get('/api/users/:id', async (req, res) => {
-    const userId= req.params.id;
+    const userId = req.params.id;
     const users = await User.findById(userId); //Busca el usuario con el id dado
     res.json({ users }); //Envía la respuesta del usuario con ese id, en formato JSON.
-});  
- 
+});
+
 
 // Create 5 users
 router.post('/api/users/create', async (req, res) => {
-  for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 5; i++) {
         await User.create({
             firstName: `Jose${i}`,
             lastName: `Perez${i}`,
             avatar: `https://i.picsum.photos/id/602/700/400.jpg?hmac=nc2uHrWPx-Q8dESNWP953rdUGMOGKfl2b14-9SNI0QE`
         });
-    } 
+    }
 
     res.json({ message: '5 Users created' });
 });
@@ -36,21 +36,19 @@ router.post('/api/users/create', async (req, res) => {
 
 //REMOVE ALL USERS
 router.delete('/api/users/delete', async (req, res) => {
- 
-          await User.remove();      
-  
-      res.json({ message: 'All users Delete' });
-  });
+    await User.remove();
+    res.json({ message: 'All users Delete' });
+});
 
 
 
 //Delete One User
 router.delete('/api/users/delete/:id', async (req, res) => {
-    const userId= req.params.id;
-    const users = await User.findByIdAndDelete(userId); //Busca el usuario con el id dado
+    const userId = req.params.id;
+    const user = await User.findByIdAndDelete(userId); //Busca el usuario con el id dado
 
-    res.json({ message: `User ID:${req.params.id} was deleted.`}); //Envía la respuesta del usuario con ese id, en formato JSON.
-});  
+    res.json({ message: `User ID:${user.id} was deleted.` }); //Envía la respuesta del usuario con ese id, en formato JSON.
+});
 
 
 module.exports = router;
