@@ -69,6 +69,7 @@ class _HomePageState extends State<HomePage> {
                 physics: const BouncingScrollPhysics(),
                 itemCount: usersData.isEmpty ? 0 : usersData.length,
                 itemBuilder: (BuildContext context, int index) {
+                  //User
                   final user = usersData[index];
 
                   return Dismissible(
@@ -83,9 +84,9 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
+                    direction: DismissDirection.startToEnd,
                     onDismissed: (direction) {
                       ServerApi.deleteUser("/users/delete", user.id);
-
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('${user.firstName} dismissed')));
                     },
