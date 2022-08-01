@@ -19,7 +19,7 @@ router.get('/api/users', async (req, res) => {
  */
 
 
-router.get('/api/users/create', async (req, res) => {
+router.post('/api/users/create', async (req, res) => {
   for (let i = 0; i < 5; i++) {
         await User.create({
             firstName: `Jose${i}`,

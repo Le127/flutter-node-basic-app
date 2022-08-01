@@ -40,4 +40,22 @@ class ServerApi {
       throw ("Error en el GET");
     }
   }
+
+
+
+
+
+    //CreateAllUsers
+  static Future createUser(String path) async {
+    try {
+      var urlParse = Uri.parse(baseUrl + path);
+      http.Response response = await http.post(urlParse);
+
+      return response;
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      throw ("Error en el GET");
+    }
+  }
 }
