@@ -1,9 +1,10 @@
+import 'dart:convert';
+
 import 'package:users_app_client/helpers/platform_details.dart';
 import 'package:users_app_client/models/users.dart';
 import 'package:http/http.dart' as http;
 
 class ServerApi {
-
   static String baseUrl = '';
   static String baseUrlplatform() {
     if (PlatformDetails().isDesktop) {
@@ -27,8 +28,7 @@ class ServerApi {
     }
   }
 
-
-    //DeleteOneUser
+  //DeleteOneUser
   static Future deleteUser(String path, String id) async {
     try {
       var urlParse = Uri.parse("$baseUrl$path/$id");
@@ -56,8 +56,7 @@ class ServerApi {
     }
   }
 
-
-    //CreateAllUsers
+  //CreateAllUsers
   static Future createUser(String path) async {
     try {
       var urlParse = Uri.parse(baseUrl + path);
@@ -68,6 +67,32 @@ class ServerApi {
       // ignore: avoid_print
       print(e);
       throw ("Error en el GET");
+    }
+  }
+
+  //Update One User
+  static Future updateUser(String path, User user) async {
+    //Convierte la data como body para poder utilizarla
+    final userData = {
+      "firstName": "AADASDA",
+      "lastName": "user.lastName",
+      "avatar": user.avatar
+    };
+
+    try {
+      //respuesta
+      var urlParse = Uri.parse(baseUrl + path);
+      print(urlParse);
+
+      http.Response response =
+          await http.put(urlParse, body: jsonEncode(user));
+
+      print(response.body);
+      return response.body;
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      throw ("Error en el Update Put");
     }
   }
 }

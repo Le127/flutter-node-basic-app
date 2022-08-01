@@ -26,14 +26,14 @@ class Users {
 
 class User {
     User({
-        required this.id,
+        this.id,
         required this.firstName,
         required this.lastName,
         required this.avatar,
 
     });
 
-    String id;
+    String? id;
     String firstName;
     String lastName;
     String avatar;

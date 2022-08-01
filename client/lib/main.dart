@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage> {
                   final user = usersData[index];
 
                   return Dismissible(
-                    key: Key(user.id),
+                    key: Key(user.id!),
                     background: Container(
                       color: Colors.red,
                       child: Row(
@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     direction: DismissDirection.startToEnd,
                     onDismissed: (direction) {
-                      ServerApi.deleteUser("/users/delete", user.id);
+                      ServerApi.deleteUser("/users/delete", user.id!);
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('${user.firstName} dismissed')));
                     },
@@ -120,7 +120,18 @@ class _HomePageState extends State<HomePage> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(user.firstName),
-                          )
+                          ),
+                          const Spacer(),
+                          IconButton(
+                              onPressed: () {
+                                ServerApi.updateUser(
+                                    "/users/update/${user.id}",
+                                    User(
+                                        firstName: "Rivardo",
+                                        lastName: "iorio",
+                                        avatar: "AVATARRR"));
+                              },
+                              icon: const Icon(Icons.update))
                         ],
                       ),
                     ),
@@ -131,6 +142,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           setState(() => indicator = true);
+
           await ServerApi.createUser('/users/create');
           ServerApi.getUsers('/users').then((usersDB) {
             setState(() {

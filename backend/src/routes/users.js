@@ -11,12 +11,24 @@ router.get('/api/users', async (req, res) => {
     res.json({ users: users }); //Envía la respuesta de todos los usuarios de la base de datos, en formato JSON.
 });
 
-//Get One User
-router.get('/api/users/:id', async (req, res) => {
-    const userId = req.params.id;
-    const users = await User.findById(userId); //Busca el usuario con el id dado
-    res.json({ users }); //Envía la respuesta del usuario con ese id, en formato JSON.
+
+
+//Update User
+router.put('/api/users/update/:id', async (req, res) => {
+
+    const { firstName, lastName, avatar } = req.body;
+    const { id } = req.params;
+    const user = await User.findByIdAndUpdate(id, { firstName, lastName, avatar }, { new: true })
+
+    // .then(user => res.json(user))
+    // .catch(err => res.json(err));
+    // res.json({ user }); //Envía la respuesta del usuario con ese id, en formato JSON.
+    res.json({ message: `ACTUALIZADO EL Usuario ${id}`, user: user })
 });
+
+
+
+
 
 
 // Create 5 users

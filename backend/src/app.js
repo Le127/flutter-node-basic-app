@@ -8,6 +8,8 @@ const cors = require('cors');
 //Middleware
 app.use(morgan('dev'));
 app.use(cors());
+//Contiene bodyparser
+app.use(express.json());
 
 // rutas?
 app.use(require('./routes/users'));
