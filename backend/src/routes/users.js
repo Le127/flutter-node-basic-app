@@ -5,20 +5,21 @@ const router = Router();
 const User = require('../models/User.js');
 
 
-
+//Get AllUsers
 router.get('/api/users', async (req, res) => {
     const users = await User.find(); //Busca todos los usuarios de la base de datos
     res.json({ users: users }); //Envía la respuesta de todos los usuarios de la base de datos, en formato JSON.
 });
-/* 
- router.get('/api/users/:id', async (req, res) => {
+
+//Get One User
+router.get('/api/users/:id', async (req, res) => {
     const userId= req.params.id;
     const users = await User.findById(userId); //Busca el usuario con el id dado
     res.json({ users }); //Envía la respuesta del usuario con ese id, en formato JSON.
 });  
- */
+ 
 
-
+// Create 5 users
 router.post('/api/users/create', async (req, res) => {
   for (let i = 0; i < 5; i++) {
         await User.create({
@@ -36,11 +37,20 @@ router.post('/api/users/create', async (req, res) => {
 //REMOVE ALL USERS
 router.delete('/api/users/delete', async (req, res) => {
  
-          await User.deleteMany();      
+          await User.remove();      
   
       res.json({ message: 'All users Delete' });
   });
 
+
+
+//Delete One User
+router.delete('/api/users/delete/:id', async (req, res) => {
+    const userId= req.params.id;
+    const users = await User.findByIdAndDelete(userId); //Busca el usuario con el id dado
+
+    res.json({ message: `User ID:${req.params.id} was deleted.`}); //Envía la respuesta del usuario con ese id, en formato JSON.
+});  
 
 
 module.exports = router;

@@ -24,12 +24,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<User> usersData = [];
+  bool indicator = true;
 
   @override
   void initState() {
     ServerApi.getUsers('/users').then((usersDB) {
       setState(() {
         usersData = usersDB.users;
+        indicator = false;
       });
     });
     super.initState();
@@ -61,47 +63,67 @@ class _HomePageState extends State<HomePage> {
             PointerDeviceKind.mouse,
           },
         ),
-        child: ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          itemCount: usersData.isEmpty ? 0 : usersData.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Card(
-              child: Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      '$index',
-                      style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w500),
+        child: indicator
+            ? const Center(child: CircularProgressIndicator())
+            : ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: usersData.isEmpty ? 0 : usersData.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final user = usersData[index];
+
+                  return Dismissible(
+                    key: Key(user.id),
+                    background: Container(
+                      color: Colors.red,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: const [
+                          SizedBox(width: 20),
+                          Icon(Icons.delete),
+                        ],
+                      ),
                     ),
-                  ),
-                  CircleAvatar(
-                    backgroundImage: NetworkImage(usersData[index].avatar),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(usersData[index].firstName),
-                  )
-                ],
+                    onDismissed: (direction) {
+                      ServerApi.deleteUser("/users/delete", user.id);
+
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('${user.firstName} dismissed')));
+                    },
+                    child: Card(
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              '$index',
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w500),
+                            ),
+                          ),
+                          CircleAvatar(
+                            backgroundImage: NetworkImage(user.avatar),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(user.firstName),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
+          setState(() => indicator = true);
           await ServerApi.createUser('/users/create');
-
           ServerApi.getUsers('/users').then((usersDB) {
             setState(() {
               usersData = usersDB.users;
+              indicator = false;
             });
           });
-
-/*           setState(() {
-            usersData = [...usersData];
-          }); */
         },
         tooltip: "Create five Users",
         child: const Icon(Icons.people),

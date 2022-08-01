@@ -27,6 +27,21 @@ class ServerApi {
     }
   }
 
+
+    //DeleteOneUser
+  static Future deleteUser(String path, String id) async {
+    try {
+      var urlParse = Uri.parse("$baseUrl$path/$id");
+      http.Response response = await http.delete(urlParse);
+
+      return response;
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+      throw ("Error en el GET");
+    }
+  }
+
   //DeleteAllUsers
   static Future deleteUsers(String path) async {
     try {
@@ -40,9 +55,6 @@ class ServerApi {
       throw ("Error en el GET");
     }
   }
-
-
-
 
 
     //CreateAllUsers
